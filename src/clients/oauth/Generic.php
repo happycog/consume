@@ -1,6 +1,7 @@
 <?php
 namespace verbb\consume\clients\oauth;
 
+use craft\helpers\App;
 use verbb\consume\base\OAuthClient;
 
 use verbb\auth\providers\Generic as GenericProvider;
@@ -50,12 +51,12 @@ class Generic extends OAuthClient
     public function getOAuthProviderConfig(): array
     {
         $config = parent::getOAuthProviderConfig();
-        $config['urlAuthorize'] = $this->authorizationUrl;
-        $config['urlAccessToken'] = $this->tokenUrl;
-        $config['urlResourceOwnerDetails'] = $this->url;
+        $config['urlAuthorize'] = App::parseEnv($this->authorizationUrl);
+        $config['urlAccessToken'] = App::parseEnv($this->tokenUrl);
+        $config['urlResourceOwnerDetails'] = App::parseEnv($this->url);
         $config['scopes'] = $this->scopes;
         $config['scopeSeparator'] = $this->scopeSeparator;
-        $config['baseApiUrl'] = $this->url;
+        $config['baseApiUrl'] = App::parseEnv($this->url);
 
         // Merge in any additional config options set at the template level
         $config = array_merge($config, $this->getProviderOptions());
