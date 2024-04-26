@@ -35,7 +35,7 @@ abstract class OAuthClient extends Client implements OAuthProviderInterface
     // =========================================================================
 
     use OAuthProviderTrait;
-    
+
 
     // Public Methods
     // =========================================================================
@@ -86,6 +86,11 @@ abstract class OAuthClient extends Client implements OAuthProviderInterface
     public function getRedirectUri(): ?string
     {
         $siteId = Craft::$app->getSites()->getPrimarySite()->id;
+
+        // If headless mode is enabled, we should use the CP URL
+        if (Craft::$app->config->general->headlessMode) {
+            return UrlHelper::cpUrl('consume/auth/callback', null, null, $siteId);
+        }
 
         // We should always use the primary site for the redirect
         return UrlHelper::siteUrl('consume/auth/callback', null, null, $siteId);
